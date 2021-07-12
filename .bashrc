@@ -142,3 +142,12 @@ export RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
 export RUST_LOG=debug
 source "$HOME/.cargo/env"
 export GPG_TTY=$(tty)
+
+if [ -z ${SSH_AGENT_PID+x} ]; then
+	if [ ! -f /tmp/ssh-agent.$(whoami) ]; then
+		touch /tmp/ssh-agent.$(whoami)
+		chmod 600 /tmp/ssh-agent.$(whoami)
+		ssh-agent > /tmp/ssh-agent.$(whoami)
+	fi
+	eval $(cat /tmp/ssh-agent.$(whoami))
+fi
