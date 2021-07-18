@@ -144,10 +144,11 @@ source "$HOME/.cargo/env"
 export GPG_TTY=$(tty)
 
 if [ -z ${SSH_AGENT_PID+x} ]; then
-	if [ ! -f /tmp/ssh-agent.$(whoami) ]; then
-		touch /tmp/ssh-agent.$(whoami)
-		chmod 600 /tmp/ssh-agent.$(whoami)
-		ssh-agent > /tmp/ssh-agent.$(whoami)
+	SSH_AGENT_FILE=/run/user/$(id -u)/ssh-agent.$(whoami)
+	if [ ! -f $SSH_AGENT_FILE  ]; then
+		touch $SSH_AGENT_FILE
+		chmod 600 $SSH_AGENT_FILE
+		ssh-agent > $SSH_AGENT_FILE
 	fi
-	eval $(cat /tmp/ssh-agent.$(whoami))
+	eval $(cat $SSH_AGENT_FILE)
 fi
