@@ -116,7 +116,7 @@ unset safe_term match_lhs
 
 # Try to enable the "Command not found" hook ("pacman -S pkgfile" to install it).
 # See also: https://wiki.archlinux.org/index.php/Bash#The_.22command_not_found.22_hook
-[ -r /usr/share/doc/pkgfile/command-not-found.bash ] && . /usr/share/doc/pkgfile/command-not-found.bash
+# [ -r /usr/share/doc/pkgfile/command-not-found.bash ] && . /usr/share/doc/pkgfile/command-not-found.bash
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -152,3 +152,4 @@ if [ -z ${SSH_AGENT_PID+x} ]; then
 	fi
 	eval $(cat $SSH_AGENT_FILE)
 fi
+[ -r ~/.config/shadowsocks/env ] && . ~/.config/shadowsocks/env
