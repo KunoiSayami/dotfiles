@@ -26,7 +26,10 @@ shopt -s checkwinsize
 # Enable history appending instead of overwriting.
 shopt -s histappend
 
-
+# source: https://thucnc.medium.com/how-to-show-current-git-branch-with-colors-in-bash-prompt-380d05a24745
+parse_git_branch() {
+     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/<\1> /'
+}
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -68,7 +71,7 @@ match_lhs=""
         && type -P dircolors >/dev/null \
         && match_lhs=$(dircolors --print-database)
 
-if [[ $'\n'${match_lhs} == *$'\n'"TERM "${safe_term}* ]] ; then
+if [[ $'\n'${match_lhs} == *$'\n'"TERM "${safe_term}* ]] || [ $TERM == "xterm-256color" ]; then
 
         # we have colors :-)
 
@@ -81,7 +84,7 @@ if [[ $'\n'${match_lhs} == *$'\n'"TERM "${safe_term}* ]] ; then
                 fi
         fi
 
-        PS1="$( echo '\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]')\[\033[01;34m\]\w \$([[ \$? != 0 ]] && echo \"\")\\$\[\033[00m\] "
+        PS1="$( echo '\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]')\[\033[01;34m\]\w \$([[ \$? != 0 ]] && echo \"\")\\$\[\033[00m\] \[\e[91m\]\$(parse_git_branch)\[\e[00m\]"
 
         # Use this other PS1 string if you want \W for root and \w for all other users:
         # PS1="$(if [[ ${EUID} == 0 ]]; then echo '\[\033[01;31m\]\h\[\033[01;34m\] \W'; else echo '\[\033[01;32m\]\u@\h\[\033[01;34m\] \w'; fi) \$([[ \$? != 0 ]] && echo \"\[\033[01;31m\]:(\[\033[01;34m\] \")\\$\[\033[00m\] "
@@ -96,12 +99,11 @@ if [[ $'\n'${match_lhs} == *$'\n'"TERM "${safe_term}* ]] ; then
         # alias pacman="pacman --color=auto"
 
         # show root@ when we do not have colors
-
-        #PS1="\u@\h \w \$([[ \$? != 0 ]] && echo \":( \")\$ "
+else
+        PS1="\u@\h \w \$([[ \$? != 0 ]] && echo \":( \") \$(parse_git_branch) \$ "
 
         # Use this other PS1 string if you want \W for root and \w for all other users:
         # PS1="\u@\h $(if [[ ${EUID} == 0 ]]; then echo '\W'; else echo '\w'; fi) \$([[ \$? != 0 ]] && echo \":( \")\$ "
-
 fi
 
 PS2="> "
@@ -137,10 +139,13 @@ alias la='ls -A'
 alias l='ls -CF'
 alias vi='vim'
 export PATH=$PATH:~/.local/bin
+# rust rated
 export RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static
 export RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
 export RUST_LOG=debug
 source "$HOME/.cargo/env"
+export DISK_WAIT_TIME=500
+
 export GPG_TTY=$(tty)
 
 if [ -z ${SSH_AGENT_PID+x} ]; then
@@ -153,3 +158,4 @@ if [ -z ${SSH_AGENT_PID+x} ]; then
 	eval $(cat $SSH_AGENT_FILE)
 fi
 [ -r ~/.config/shadowsocks/env ] && . ~/.config/shadowsocks/env
+
