@@ -143,12 +143,15 @@ export PATH=$PATH:~/.local/bin
 export RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static
 export RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
 export RUST_LOG=debug
-source "$HOME/.cargo/env"
+[ -r ~/.cargo/env ] && source "$HOME/.cargo/env"
 export DISK_WAIT_TIME=500
 
 export GPG_TTY=$(tty)
 
-if [ -z ${SSH_AGENT_PID+x} ]; then
+# Option for enable ssh agent, to enable it, set to true
+ENABLE_SSH_AGENT="true"
+
+if [ $ENABLE_SSH_AGENT == "true" ] && [ -z ${SSH_AGENT_PID+x} ]; then
 	SSH_AGENT_FILE=/run/user/$(id -u)/ssh-agent.$(whoami)
 	if [ ! -f $SSH_AGENT_FILE  ]; then
 		touch $SSH_AGENT_FILE
