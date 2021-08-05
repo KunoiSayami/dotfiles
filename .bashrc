@@ -148,17 +148,36 @@ export DISK_WAIT_TIME=500
 
 export GPG_TTY=$(tty)
 
-# Option for enable ssh agent, to enable it, set to true
-ENABLE_SSH_AGENT="true"
+# Option for enable ssh agent, to enable it, uncomment it
+#ENABLE_SSH_AGENT="true"
 
-if [ $ENABLE_SSH_AGENT == "true" ] && [ -z ${SSH_AGENT_PID+x} ]; then
-	SSH_AGENT_FILE=/run/user/$(id -u)/ssh-agent.$(whoami)
-	if [ ! -f $SSH_AGENT_FILE  ]; then
-		touch $SSH_AGENT_FILE
-		chmod 600 $SSH_AGENT_FILE
-		ssh-agent > $SSH_AGENT_FILE
+enable_gpg_agent() {
+        unset SSH_AGENT_PID
+        export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+        gpgconf --launch gpg-agent
+        echo "Use gpg agent to provide authentication service"
+}
+
+enable_ssh_agent() {
+        if [ -z ${SSH_AGENT_PID+x} ]; then
+                SSH_AGENT_FILE=/run/user/$(id -u)/ssh-agent.$(whoami)
+                if [ ! -f $SSH_AGENT_FILE  ]; then
+                        touch $SSH_AGENT_FILE
+                        chmod 600 $SSH_AGENT_FILE
+                        ssh-agent > $SSH_AGENT_FILE
+                fi
+                eval $(cat $SSH_AGENT_FILE)
+        fi
+}
+
+export -f enable_ssh_agent
+export -f enable_gpg_agent
+if [ -z ${DISABLE_AGENTS+x} ]; then
+	if [ ! -z $ENABLE_SSH_AGENT ] && [ $ENABLE_SSH_AGENT == "true" ]; then
+        	enable_ssh_agent
+	else
+        	enable_gpg_agent
 	fi
-	eval $(cat $SSH_AGENT_FILE)
 fi
 [ -r ~/.config/shadowsocks/env ] && . ~/.config/shadowsocks/env
 
