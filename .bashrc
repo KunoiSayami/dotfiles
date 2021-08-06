@@ -31,6 +31,12 @@ parse_git_branch() {
      git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/<\1> /'
 }
 
+get_last_status() {
+    _LAST_STATUS=$?
+    [[ $_LAST_STATUS != 0 ]] && echo " $_LAST_STATUS :("
+    unset _LAST_STATUS
+}
+
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
@@ -84,7 +90,7 @@ if [[ $'\n'${match_lhs} == *$'\n'"TERM "${safe_term}* ]] || [ $TERM == "xterm-25
         fi
     fi
 
-    PS1="$( echo '\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]')\[\033[01;34m\]\w \$([[ \$? != 0 ]] && echo \"\")\\$\[\033[00m\] \[\e[91m\]\$(parse_git_branch)\[\e[00m\]"
+    PS1="$( echo '\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]')\[\033[01;34m\]\w\[\033[01;31m\]\$(get_last_status)\[\033[01;00m\] \\$\[\033[00m\] \[\e[91m\]\$(parse_git_branch)\[\e[00m\]"
 
     # Use this other PS1 string if you want \W for root and \w for all other users:
     # PS1="$(if [[ ${EUID} == 0 ]]; then echo '\[\033[01;31m\]\h\[\033[01;34m\] \W'; else echo '\[\033[01;32m\]\u@\h\[\033[01;34m\] \w'; fi) \$([[ \$? != 0 ]] && echo \"\[\033[01;31m\]:(\[\033[01;34m\] \")\\$\[\033[00m\] "
