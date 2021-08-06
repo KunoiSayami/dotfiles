@@ -40,12 +40,12 @@ HISTSIZE=5000
 HISTFILESIZE=10000
 
 case ${TERM} in
-        xterm*|rxvt*|Eterm|aterm|kterm|gnome*)
-                PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"'
-                ;;
-        screen)
-                PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033_%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"'
-                ;;
+    xterm*|rxvt*|Eterm|aterm|kterm|gnome*)
+        PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"'
+        ;;
+    screen)
+        PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033_%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"'
+        ;;
 esac
 
 # fortune is a simple program that displays a pseudorandom message
@@ -68,42 +68,42 @@ match_lhs=""
 [[ -f ~/.dir_colors ]] && match_lhs="${match_lhs}$(<~/.dir_colors)"
 [[ -f /etc/DIR_COLORS ]] && match_lhs="${match_lhs}$(</etc/DIR_COLORS)"
 [[ -z ${match_lhs} ]] \
-        && type -P dircolors >/dev/null \
-        && match_lhs=$(dircolors --print-database)
+    && type -P dircolors >/dev/null \
+    && match_lhs=$(dircolors --print-database)
 
 if [[ $'\n'${match_lhs} == *$'\n'"TERM "${safe_term}* ]] || [ $TERM == "xterm-256color" ]; then
 
-        # we have colors :-)
+    # we have colors :-)
 
-        # Enable colors for ls, etc. Prefer ~/.dir_colors
-        if type -P dircolors >/dev/null ; then
-                if [[ -f ~/.dir_colors ]] ; then
-                        eval $(dircolors -b ~/.dir_colors)
-                elif [[ -f /etc/DIR_COLORS ]] ; then
-                        eval $(dircolors -b /etc/DIR_COLORS)
-                fi
+    # Enable colors for ls, etc. Prefer ~/.dir_colors
+    if type -P dircolors >/dev/null ; then
+        if [[ -f ~/.dir_colors ]] ; then
+            eval $(dircolors -b ~/.dir_colors)
+        elif [[ -f /etc/DIR_COLORS ]] ; then
+            eval $(dircolors -b /etc/DIR_COLORS)
         fi
+    fi
 
-        PS1="$( echo '\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]')\[\033[01;34m\]\w \$([[ \$? != 0 ]] && echo \"\")\\$\[\033[00m\] \[\e[91m\]\$(parse_git_branch)\[\e[00m\]"
+    PS1="$( echo '\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]')\[\033[01;34m\]\w \$([[ \$? != 0 ]] && echo \"\")\\$\[\033[00m\] \[\e[91m\]\$(parse_git_branch)\[\e[00m\]"
 
-        # Use this other PS1 string if you want \W for root and \w for all other users:
-        # PS1="$(if [[ ${EUID} == 0 ]]; then echo '\[\033[01;31m\]\h\[\033[01;34m\] \W'; else echo '\[\033[01;32m\]\u@\h\[\033[01;34m\] \w'; fi) \$([[ \$? != 0 ]] && echo \"\[\033[01;31m\]:(\[\033[01;34m\] \")\\$\[\033[00m\] "
+    # Use this other PS1 string if you want \W for root and \w for all other users:
+    # PS1="$(if [[ ${EUID} == 0 ]]; then echo '\[\033[01;31m\]\h\[\033[01;34m\] \W'; else echo '\[\033[01;32m\]\u@\h\[\033[01;34m\] \w'; fi) \$([[ \$? != 0 ]] && echo \"\[\033[01;31m\]:(\[\033[01;34m\] \")\\$\[\033[00m\] "
 
-        alias ls="ls --color=auto"
-        alias dir="dir --color=auto"
-        alias grep="grep --color=auto"
-        alias dmesg='dmesg --color'
+    alias ls="ls --color=auto"
+    alias dir="dir --color=auto"
+    alias grep="grep --color=auto"
+    alias dmesg='dmesg --color'
 
-        # Uncomment the "Color" line in /etc/pacman.conf instead of uncommenting the following line...!
+    # Uncomment the "Color" line in /etc/pacman.conf instead of uncommenting the following line...!
 
-        # alias pacman="pacman --color=auto"
+    # alias pacman="pacman --color=auto"
 
-        # show root@ when we do not have colors
+    # show root@ when we do not have colors
 else
-        PS1="\u@\h \w \$([[ \$? != 0 ]] && echo \":( \") \$(parse_git_branch) \$ "
+    PS1="\u@\h \w \$([[ \$? != 0 ]] && echo \":( \") \$(parse_git_branch) \$ "
 
-        # Use this other PS1 string if you want \W for root and \w for all other users:
-        # PS1="\u@\h $(if [[ ${EUID} == 0 ]]; then echo '\W'; else echo '\w'; fi) \$([[ \$? != 0 ]] && echo \":( \")\$ "
+    # Use this other PS1 string if you want \W for root and \w for all other users:
+    # PS1="\u@\h $(if [[ ${EUID} == 0 ]]; then echo '\W'; else echo '\w'; fi) \$([[ \$? != 0 ]] && echo \":( \")\$ "
 fi
 
 PS2="> "
@@ -139,6 +139,7 @@ alias la='ls -A'
 alias l='ls -CF'
 alias vi='vim'
 export PATH=$PATH:~/.local/bin
+
 # rust rated
 export RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static
 export RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
@@ -146,38 +147,40 @@ export RUST_LOG=debug
 [ -r ~/.cargo/env ] && source "$HOME/.cargo/env"
 export DISK_WAIT_TIME=500
 
+
 export GPG_TTY=$(tty)
 
-# Option for enable ssh agent, to enable it, uncomment it
+# Option for enable ssh agent, uncomment it to enable
 #ENABLE_SSH_AGENT="true"
 
 enable_gpg_agent() {
-        unset SSH_AGENT_PID
-        export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-        gpgconf --launch gpg-agent
-        echo "Use gpg agent to provide authentication service"
+    unset SSH_AGENT_PID
+    export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+    gpgconf --launch gpg-agent
+    echo "Use gpg agent to provide authentication service"
 }
 
 enable_ssh_agent() {
-        if [ -z ${SSH_AGENT_PID+x} ]; then
-                SSH_AGENT_FILE=/run/user/$(id -u)/ssh-agent.$(whoami)
-                if [ ! -f $SSH_AGENT_FILE  ]; then
-                        touch $SSH_AGENT_FILE
-                        chmod 600 $SSH_AGENT_FILE
-                        ssh-agent > $SSH_AGENT_FILE
-                fi
-                eval $(cat $SSH_AGENT_FILE)
+    if [ -z ${SSH_AGENT_PID+x} ]; then
+        SSH_AGENT_FILE=/run/user/$(id -u)/ssh-agent.$(whoami)
+        if [ ! -f $SSH_AGENT_FILE  ]; then
+            touch $SSH_AGENT_FILE
+            chmod 600 $SSH_AGENT_FILE
+            ssh-agent > $SSH_AGENT_FILE
         fi
+        eval $(cat $SSH_AGENT_FILE)
+    fi
 }
 
 export -f enable_ssh_agent
 export -f enable_gpg_agent
+
 if [ -z ${DISABLE_AGENTS+x} ]; then
-	if [ ! -z $ENABLE_SSH_AGENT ] && [ $ENABLE_SSH_AGENT == "true" ]; then
-        	enable_ssh_agent
-	else
-        	enable_gpg_agent
-	fi
+    if [ ! -z $ENABLE_SSH_AGENT ] && [ $ENABLE_SSH_AGENT == "true" ]; then
+        enable_ssh_agent
+    else
+        enable_gpg_agent
+    fi
 fi
 [ -r ~/.config/shadowsocks/env ] && . ~/.config/shadowsocks/env
 
