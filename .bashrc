@@ -39,13 +39,13 @@ get_last_status() {
 
 parse_git_commit_diff() {
     _CURRENT_BRANCH=$(parse_git_branch)
-    if [ ! -z ${_CURRENT_BRANCH+x} ]; then
+    if [ -z $_CURRENT_BRANCH ]; then
         unset _CURRENT_BRANCH
         return
     fi
     # https://stackoverflow.com/a/27940027
     # https://stackoverflow.com/a/13402368
-    _BRANCH_COMMIT_DIFF=($(git rev-list --left-right --count $_CURRENT_BRANCH...origin/$_CURRENT_BRANCH 2> /dev/null))
+    _BRANCH_COMMIT_DIFF=($(git rev-list --left-right --count $_CURRENT_BRANCH...origin/$_CURRENT_BRANCH))
 
     if [[ ${_BRANCH_COMMIT_DIFF[0]} != "0" ]]; then
         _AHEAD="↑${_BRANCH_COMMIT_DIFF[0]}"
