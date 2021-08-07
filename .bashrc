@@ -82,6 +82,8 @@ case ${TERM} in
         ;;
 esac
 
+PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
+
 # fortune is a simple program that displays a pseudorandom message
 # from a database of quotations at logon and/or logout.
 # If you wish to use it, please install "fortune-mod" from the
@@ -118,7 +120,7 @@ if [[ $'\n'${match_lhs} == *$'\n'"TERM "${safe_term}* ]] || [ $TERM == "xterm-25
         fi
     fi
 
-    PS1="$( echo '\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]')\[\033[01;34m\]\w\[\033[01;31m\]\$(get_last_status)\[\033[01;00m\] \\$\[\033[00m\]\[\e[91m\]\$(parse_git_commit_diff)\[\e[00m\] "
+    PS1="$( echo '\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]')\[\033[01;34m\]\w\[\033[01;31m\]\$(get_last_status)\[\033[01;00m\]\[\e[91m\]\$(parse_git_commit_diff)\[\e[00m\] \\$\[\033[00m\] "
 
     # Use this other PS1 string if you want \W for root and \w for all other users:
     # PS1="$(if [[ ${EUID} == 0 ]]; then echo '\[\033[01;31m\]\h\[\033[01;34m\] \W'; else echo '\[\033[01;32m\]\u@\h\[\033[01;34m\] \w'; fi) \$([[ \$? != 0 ]] && echo \"\[\033[01;31m\]:(\[\033[01;34m\] \")\\$\[\033[00m\] "
@@ -190,7 +192,7 @@ export GPG_TTY=$(tty)
 enable_gpg_agent() {
     unset SSH_AGENT_PID
     SOCK_TARGET=$(gpgconf --list-dirs agent-ssh-socket)
-    if [ $SOCK_TARGET != $SSH_AUTH_SOCK ]; then
+    if [[ $SOCK_TARGET != $SSH_AUTH_SOCK ]]; then
         export SSH_AUTH_SOCK=$SOCK_TARGET
         echo "Use gpg agent to provide authentication service"
     fi
