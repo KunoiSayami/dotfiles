@@ -39,20 +39,25 @@ get_last_status() {
 
 parse_git_commit_diff() {
     _CURRENT_BRANCH=$(parse_git_branch)
+    if [ ! -z ${_CURRENT_BRANCH+x} ]; then
+        unset _CURRENT_BRANCH
+        return
+    fi
     # https://stackoverflow.com/a/27940027
     # https://stackoverflow.com/a/13402368
-    _BRANCH_COMMIT_DIFF=($(git rev-list --left-right --count $_CURRENT_BRANCH...origin/$_CURRENT_BRANCH))
-    if [ ${_BRANCH_COMMIT_DIFF[0]} != "0" ]; then
+    _BRANCH_COMMIT_DIFF=($(git rev-list --left-right --count $_CURRENT_BRANCH...origin/$_CURRENT_BRANCH 2> /dev/null))
+
+    if [[ ${_BRANCH_COMMIT_DIFF[0]} != "0" ]]; then
         _AHEAD="↑${_BRANCH_COMMIT_DIFF[0]}"
     fi
-    if [ ${_BRANCH_COMMIT_DIFF[1]} != "0" ]; then
+    if [[ ${_BRANCH_COMMIT_DIFF[1]} != "0" ]]; then
         _BEHIND="↓${_BRANCH_COMMIT_DIFF[1]}"
     fi
     if [ ! -z ${_AHEAD+x} ] || [ ! -z ${_BEHIND+x} ]; then
         _SPLIT="\033[0;m:"
     fi
     # https://stackoverflow.com/a/5947802
-    echo -e "<$_CURRENT_BRANCH$_SPLIT\033[0;32m$_AHEAD$_BEHIND\033[0;31m>";
+    echo -e " <$_CURRENT_BRANCH$_SPLIT\033[0;32m$_AHEAD$_BEHIND\033[0;31m>";
     unset _CURRENT_BRANCH
     unset _BRANCH_COMMIT_DIFF
     unset _BEHIND
@@ -113,7 +118,7 @@ if [[ $'\n'${match_lhs} == *$'\n'"TERM "${safe_term}* ]] || [ $TERM == "xterm-25
         fi
     fi
 
-    PS1="$( echo '\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]')\[\033[01;34m\]\w\[\033[01;31m\]\$(get_last_status)\[\033[01;00m\] \\$\[\033[00m\] \[\e[91m\]\$(parse_git_commit_diff)\[\e[00m\] "
+    PS1="$( echo '\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]')\[\033[01;34m\]\w\[\033[01;31m\]\$(get_last_status)\[\033[01;00m\] \\$\[\033[00m\]\[\e[91m\]\$(parse_git_commit_diff)\[\e[00m\] "
 
     # Use this other PS1 string if you want \W for root and \w for all other users:
     # PS1="$(if [[ ${EUID} == 0 ]]; then echo '\[\033[01;31m\]\h\[\033[01;34m\] \W'; else echo '\[\033[01;32m\]\u@\h\[\033[01;34m\] \w'; fi) \$([[ \$? != 0 ]] && echo \"\[\033[01;31m\]:(\[\033[01;34m\] \")\\$\[\033[00m\] "
@@ -187,9 +192,15 @@ enable_gpg_agent() {
     SOCK_TARGET=$(gpgconf --list-dirs agent-ssh-socket)
     if [ $SOCK_TARGET != $SSH_AUTH_SOCK ]; then
         export SSH_AUTH_SOCK=$SOCK_TARGET
-        gpgconf --launch gpg-agent
         echo "Use gpg agent to provide authentication service"
     fi
+
+    _GPG_MATCH=$(ps -x | grep gpg-agent | grep -v grep)
+
+    if [ ! -z ${_GPG_MATCH+x} ]; then
+        gpgconf --launch gpg-agent
+    fi
+    unset _GPG_MATCH
 }
 
 enable_ssh_agent() {
