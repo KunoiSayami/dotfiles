@@ -31,7 +31,7 @@ if [ -z ${IS_VPS} ]; then
 fi
 
 
-COUNTRY_CODE=$(curl --noproxy -fsSL '*' https://api.ip.sb/geoip | sed  's/,/\n/g' | sed 's/"//g' | grep country_code | cut -d':' -f2)
+COUNTRY_CODE=$(curl --noproxy '*' -fsSL https://api.ip.sb/geoip | sed  's/,/\n/g' | sed 's/"//g' | grep country_code | cut -d':' -f2)
 
 if [ $? -ne 0 ]; then
     echo "Check country code failed, please comment RUSTUP mirror section if you are not in Mainland China"
