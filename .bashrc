@@ -82,6 +82,8 @@ case ${TERM} in
         ;;
 esac
 
+
+# https://askubuntu.com/a/67306
 PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 
 # fortune is a simple program that displays a pseudorandom message
@@ -220,6 +222,9 @@ enable_ssh_agent() {
 export -f enable_ssh_agent
 export -f enable_gpg_agent
 
+# To disable all agent, uncomment next line
+#DISABLE_AGENTS=""
+
 if [ -z ${DISABLE_AGENTS+x} ]; then
     if [ ! -z $ENABLE_SSH_AGENT ] && [ $ENABLE_SSH_AGENT == "true" ]; then
         enable_ssh_agent
@@ -227,5 +232,7 @@ if [ -z ${DISABLE_AGENTS+x} ]; then
         enable_gpg_agent
     fi
 fi
+
+
 [ -r ~/.config/shadowsocks/env ] && . ~/.config/shadowsocks/env
 
