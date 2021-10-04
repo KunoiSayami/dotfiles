@@ -26,8 +26,8 @@ fi
 
 failed_function "Download file failed, abort script"
 
-if [ -z ${IS_VPS+x} ]; then
-    sed -i 's/#DISABLE_AGENTS/DISABLE_AGENTS/g' ~/.bashrc
+if [ -z ${NOT_VPS+x} ]; then
+    sed -i 's/DISABLE_AGENTS/#DISABLE_AGENTS/g' ~/.bashrc
 fi
 
 COUNTRY_CODE=$(curl --noproxy '*' -fsSL https://api.ip.sb/geoip | sed  's/,/\n/g' | sed 's/"//g' | grep country_code | cut -d':' -f2)

@@ -194,6 +194,7 @@ export GPG_TTY=$(tty)
 enable_gpg_agent() {
     unset SSH_AGENT_PID
     SOCK_TARGET=$(gpgconf --list-dirs agent-ssh-socket)
+    gpgconf --create-socketdir
     if [[ $SOCK_TARGET != $SSH_AUTH_SOCK ]]; then
         export SSH_AUTH_SOCK=$SOCK_TARGET
         echo "Use gpg agent to provide authentication service"
@@ -223,7 +224,7 @@ export -f enable_ssh_agent
 export -f enable_gpg_agent
 
 # To disable all agent, uncomment next line
-#DISABLE_AGENTS=""
+DISABLE_AGENTS=""
 
 if [ -z ${DISABLE_AGENTS+x} ]; then
     if [ ! -z $ENABLE_SSH_AGENT ] && [ $ENABLE_SSH_AGENT == "true" ]; then
@@ -236,3 +237,4 @@ fi
 
 [ -r ~/.config/shadowsocks/env ] && . ~/.config/shadowsocks/env
 
+true
