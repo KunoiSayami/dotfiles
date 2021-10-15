@@ -32,7 +32,8 @@ bindkey "^[[B" down-line-or-beginning-search # Down
 
 # colors
 autoload -U colors && colors
-[ -r /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+#[ -r /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+[ -r ~/.config/zsh/p10k.zsh ] && source ~/.config/zsh/p10k.zsh
 [ -r /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme ] && source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 
 # hints
@@ -81,4 +82,4 @@ if [ IS_MAINLAND ]; then
 fi
 
 export GPG_TTY=$(tty)
-eval $(starship init zsh)
+#eval $(starship init zsh)
