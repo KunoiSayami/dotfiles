@@ -4,6 +4,7 @@ setopt beep
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=10000000
 SAVEHIST=10000000
+
 setopt BANG_HIST                 # Treat the '!' character specially during expansion.
 setopt EXTENDED_HISTORY          # Write the history file in the ":start:elapsed;command" format.
 setopt INC_APPEND_HISTORY        # Write to the history file immediately, not when the shell exits.
@@ -31,6 +32,8 @@ bindkey "^[[B" down-line-or-beginning-search # Down
 
 # colors
 autoload -U colors && colors
+[ -r /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+[ -r /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme ] && source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 
 # hints
 autoload -Uz vcs_info
@@ -67,4 +70,15 @@ promptinit
 zstyle ':completion:*' menu select
 [ -r /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ] && source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 #prompt walters
+eval "`pip completion --zsh`"
 
+
+IS_MAINLAND=false
+
+if [ IS_MAINLAND ]; then
+	export RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static
+	export RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
+fi
+
+export GPG_TTY=$(tty)
+eval $(starship init zsh)
