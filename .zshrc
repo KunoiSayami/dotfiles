@@ -33,20 +33,21 @@ bindkey "^[[B" down-line-or-beginning-search # Down
 # colors
 autoload -U colors && colors
 #[ -r /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-[ -r ~/.config/zsh/p10k.zsh ] && source ~/.config/zsh/p10k.zsh
-[ -r /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme ] && source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
+if [ -r /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme ]; then
+    [ -r ~/.config/zsh/p10k.zsh ] && source ~/.config/zsh/p10k.zsh
+    source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
+else
+    autoload -Uz vcs_info
+    precmd_vcs_info() { vcs_info }
+    precmd_functions+=( precmd_vcs_info )
+    setopt prompt_subst
+    RPROMPT=\$vcs_info_msg_0_
+    zstyle ':vcs_info:git:*' formats '%F{9}(%b)%m%f '
+    zstyle ':vcs_info:git*+set-message:*' hooks git-st
+    zstyle ':vcs_info:*' enable git
 
-# hints
-autoload -Uz vcs_info
-precmd_vcs_info() { vcs_info }
-precmd_functions+=( precmd_vcs_info )
-setopt prompt_subst
-#RPROMPT=\$vcs_info_msg_0_
-zstyle ':vcs_info:git:*' formats '%F{9}(%b)%m%f '
-zstyle ':vcs_info:git*+set-message:*' hooks git-st
-zstyle ':vcs_info:*' enable git
-
-PS1="%{$fg[red]%}%n%{$reset_color%}@%{$fg[green]%}%m%{$reset_color%}:%{$fg[yellow]%}%~ %{$fg[red]%}%(?..%? :(%{$reset_color%} )%{$reset_color%}%# \$vcs_info_msg_0_"
+    PS1="%{$fg[red]%}%n%{$reset_color%}@%{$fg[green]%}%m%{$reset_color%}:%{$fg[yellow]%}%~ %{$fg[red]%}%(?..%? :(%{$reset_color%} )%{$reset_color%}%# \$vcs_info_msg_0_"
+fi
 
 # some alias
 alias ll='ls -alF'
@@ -71,7 +72,7 @@ promptinit
 zstyle ':completion:*' menu select
 [ -r /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ] && source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 #prompt walters
-eval "`pip completion --zsh`"
+which pip >/dev/null && eval "`pip completion --zsh`"
 
 
 IS_MAINLAND=false
@@ -83,3 +84,14 @@ fi
 
 export GPG_TTY=$(tty)
 #eval $(starship init zsh)
+
+alias pau="sudo pacman -Syu"
+alias pai="sudo pacman -S"
+alias paiy="sudo pacman -Sy"
+alias pas="pacman -Ss"
+alias paq="pacman -Qs"
+alias pasi="pacman -Si"
+alias paf="pacman -F"
+alias pafy="sudo pacman -Fy"
+
+alias gowin="sudo bootctl set-oneshot auto-windows"
