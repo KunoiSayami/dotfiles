@@ -78,12 +78,13 @@ which pip >/dev/null && eval "`pip completion --zsh`"
 
 [ -r /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-IS_MAINLAND=false
+#IS_MAINLAND=false
 
-if [ IS_MAINLAND = 'true' ]; then
-	export RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static
-	export RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
-fi
+#if [ IS_MAINLAND = 'true' ]; then
+#	export RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static
+#	export RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
+#fi
+[ -r ~/.config/zsh/mainland.zsh ] && source ~/.config/zsh/mainland.zsh
 
 export GPG_TTY=$(tty)
 #eval $(starship init zsh)
@@ -97,4 +98,15 @@ alias pasi="pacman -Si"
 alias paf="pacman -F"
 alias pafy="sudo pacman -Fy"
 
-alias gowin="sudo bootctl set-oneshot auto-windows"
+alias sus="systemctl --user start"
+alias sur="systemctl --user restart"
+alias suss="systemctl --user status"
+alias susp="systemctl --user stop"
+alias ssu="systemctl --user"
+alias sudr="systemctl --user daemon-reload"
+
+alias sls="systemctl start"
+alias slr="systemctl restart"
+alias slss="systemctl status"
+alias slsp="systemctl stop"
+alias sldr="systemctl daemon-reload"
