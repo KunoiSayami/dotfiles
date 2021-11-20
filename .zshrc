@@ -34,7 +34,6 @@ bindkey "^[[B" down-line-or-beginning-search # Down
 
 # colors
 autoload -U colors && colors
-#[ -r /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 if [ -r /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme ]; then
     [ -r ~/.config/zsh/p10k.zsh ] && source ~/.config/zsh/p10k.zsh
     source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
@@ -50,6 +49,8 @@ else
 
     PS1="%{$fg[red]%}%n%{$reset_color%}@%{$fg[green]%}%m%{$reset_color%}:%{$fg[yellow]%}%~ %{$fg[red]%}%(?..%? :(%{$reset_color%} )%{$reset_color%}%# \$vcs_info_msg_0_"
 fi
+[ -r /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
 
 # some alias
 alias ll='ls -alF'
@@ -76,14 +77,6 @@ zstyle ':completion:*' menu select
 #prompt walters
 which pip >/dev/null && eval "`pip completion --zsh`"
 
-[ -r /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-#IS_MAINLAND=false
-
-#if [ IS_MAINLAND = 'true' ]; then
-#	export RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static
-#	export RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
-#fi
 [ -r ~/.config/zsh/mainland.zsh ] && source ~/.config/zsh/mainland.zsh
 
 export GPG_TTY=$(tty)
@@ -105,8 +98,8 @@ alias susp="systemctl --user stop"
 alias ssu="systemctl --user"
 alias sudr="systemctl --user daemon-reload"
 
-alias sls="systemctl start"
-alias slr="systemctl restart"
-alias slss="systemctl status"
-alias slsp="systemctl stop"
-alias sldr="systemctl daemon-reload"
+alias sls="sudo systemctl start"
+alias slr="sudo systemctl restart"
+alias slss="sudo systemctl status"
+alias slsp="sudo systemctl stop"
+alias sldr="sudo systemctl daemon-reload"
