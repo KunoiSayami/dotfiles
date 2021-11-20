@@ -22,6 +22,8 @@ setopt HIST_BEEP                 # Beep when accessing nonexistent history.
 # inputrc
 bindkey  "^[[H"   beginning-of-line
 bindkey  "^[[F"   end-of-line
+bindkey  "^[[1~"   beginning-of-line
+bindkey  "^[[4~"   end-of-line
 bindkey  "^[[3~"  delete-char
 autoload -U up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
@@ -74,10 +76,11 @@ zstyle ':completion:*' menu select
 #prompt walters
 which pip >/dev/null && eval "`pip completion --zsh`"
 
+[ -r /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 IS_MAINLAND=false
 
-if [ IS_MAINLAND ]; then
+if [ IS_MAINLAND = 'true' ]; then
 	export RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static
 	export RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
 fi
