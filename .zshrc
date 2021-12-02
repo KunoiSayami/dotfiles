@@ -79,11 +79,32 @@ which pip >/dev/null && eval "`pip completion --zsh`"
 
 [ -r ~/.config/zsh/mainland.zsh ] && source ~/.config/zsh/mainland.zsh
 
+# Terminal Title
+autoload -Uz add-zsh-hook
+
+function set-xterm-terminal-title () {
+    printf '\e]2;%s\a' "$@"
+}
+
+function precmd-set-terminal-title () {
+    set-xterm-terminal-title "${(%):-"%n@%m: %~"}"
+}
+
+function preexec-set-terminal-title () {
+    set-xterm-terminal-title "${(%):-"%n@%m: "}$2"
+}
+
+if [[ "$TERM" == (screen*|xterm*|rxvt*|tmux*|putty*|konsole*|gnome*) ]]; then
+    add-zsh-hook -Uz precmd precmd-set-terminal-title
+    add-zsh-hook -Uz preexec preexec-set-terminal-title
+fi
+
 export GPG_TTY=$(tty)
 #eval $(starship init zsh)
 
 alias pau="sudo pacman -Syu"
-alias pai="sudo pacman -S"
+alias pai="sudo pacman --needed -S"
+alias paif="sudo pacman -S"
 alias paiy="sudo pacman -Sy"
 alias pas="pacman -Ss"
 alias paq="pacman -Qs"
