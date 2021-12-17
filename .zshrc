@@ -19,6 +19,21 @@ setopt HIST_REDUCE_BLANKS        # Remove superfluous blanks before recording en
 setopt HIST_VERIFY               # Don't execute immediately upon history expansion.
 setopt HIST_BEEP                 # Beep when accessing nonexistent history.
 
+# Terminal Title
+autoload -Uz add-zsh-hook
+
+function set-xterm-terminal-title () {
+    printf '\e]2;%s\a' "$@"
+}
+
+function precmd-set-terminal-title () {
+    set-xterm-terminal-title "${(%):-"%n@%m: %~"}"
+}
+
+function preexec-set-terminal-title () {
+    set-xterm-terminal-title "${(%):-"%n@%m: "}$2"
+}
+
 # inputrc
 bindkey  "^[[H"   beginning-of-line
 bindkey  "^[[F"   end-of-line
@@ -79,21 +94,6 @@ which pip >/dev/null && eval "`pip completion --zsh`"
 
 [ -r ~/.config/zsh/mainland.zsh ] && source ~/.config/zsh/mainland.zsh
 
-# Terminal Title
-autoload -Uz add-zsh-hook
-
-function set-xterm-terminal-title () {
-    printf '\e]2;%s\a' "$@"
-}
-
-function precmd-set-terminal-title () {
-    set-xterm-terminal-title "${(%):-"%n@%m: %~"}"
-}
-
-function preexec-set-terminal-title () {
-    set-xterm-terminal-title "${(%):-"%n@%m: "}$2"
-}
-
 if [[ "$TERM" == (screen*|xterm*|rxvt*|tmux*|putty*|konsole*|gnome*) ]]; then
     add-zsh-hook -Uz precmd precmd-set-terminal-title
     add-zsh-hook -Uz preexec preexec-set-terminal-title
@@ -109,8 +109,11 @@ alias paiy="sudo pacman -Sy"
 alias pas="pacman -Ss"
 alias paq="pacman -Qs"
 alias pasi="pacman -Si"
+alias pasii="pacman -Sii"
 alias paf="pacman -F"
 alias pafy="sudo pacman -Fy"
+alias par="sudo pacman -R"
+alias pars="sudo pacman -Rns"
 
 alias sus="systemctl --user start"
 alias sur="systemctl --user restart"
@@ -118,9 +121,17 @@ alias suss="systemctl --user status"
 alias susp="systemctl --user stop"
 alias ssu="systemctl --user"
 alias sudr="systemctl --user daemon-reload"
+alias sue="systemctl --user enable"
+alias suen="systemctl --user enable --now"
+alias sud="systemctl --user disable"
+alias sudn="systemctl --user disable --now"
 
 alias sls="sudo systemctl start"
 alias slr="sudo systemctl restart"
 alias slss="sudo systemctl status"
 alias slsp="sudo systemctl stop"
 alias sldr="sudo systemctl daemon-reload"
+alias sle="sudo systemctl enable"
+alias slen="sudo systemctl enable --now"
+alias sld="sudo systemctl disable"
+alias sldn="sudo systemctl disable --now"
