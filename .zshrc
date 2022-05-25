@@ -90,16 +90,16 @@ promptinit
 zstyle ':completion:*' menu select
 [ -r /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ] && source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 #prompt walters
-which pip >/dev/null && eval "`pip completion --zsh`"
+#which pip >/dev/null && eval "`pip completion --zsh`"
 
 [ -r ~/.config/zsh/mainland.zsh ] && source ~/.config/zsh/mainland.zsh
 
 if [[ "$TERM" == (screen*|xterm*|rxvt*|tmux*|putty*|konsole*|gnome*) ]]; then
-    add-zsh-hook -Uz precmd precmd-set-terminal-title
+    #add-zsh-hook -Uz precmd precmd-set-terminal-title
     add-zsh-hook -Uz preexec preexec-set-terminal-title
 fi
 
-export GPG_TTY=$(tty)
+export GPG_TTY=$TTY
 #eval $(starship init zsh)
 
 alias pau="sudo pacman -Syu"
@@ -125,6 +125,7 @@ alias sue="systemctl --user enable"
 alias suen="systemctl --user enable --now"
 alias sud="systemctl --user disable"
 alias sudn="systemctl --user disable --now"
+alias surd="systemctl --user reload"
 
 alias sls="sudo systemctl start"
 alias slr="sudo systemctl restart"
@@ -135,3 +136,4 @@ alias sle="sudo systemctl enable"
 alias slen="sudo systemctl enable --now"
 alias sld="sudo systemctl disable"
 alias sldn="sudo systemctl disable --now"
+alias slrd="sudo systemctl reload"
