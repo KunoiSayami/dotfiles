@@ -54,8 +54,9 @@ if [ -r /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme ]; then
     source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 else
     autoload -Uz vcs_info
-    precmd_vcs_info() { vcs_info }
-    precmd_functions+=( precmd_vcs_info )
+    #precmd_vcs_info() { vcs_info }
+    #precmd_functions+=( precmd_vcs_info )
+    add-zsh-hook -Uz precmd vcs_info
     setopt prompt_subst
     RPROMPT=\$vcs_info_msg_0_
     zstyle ':vcs_info:git:*' formats '%F{9}(%b)%m%f '
@@ -90,12 +91,11 @@ promptinit
 zstyle ':completion:*' menu select
 [ -r /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ] && source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 #prompt walters
-#which pip >/dev/null && eval "`pip completion --zsh`"
 
 [ -r ~/.config/zsh/mainland.zsh ] && source ~/.config/zsh/mainland.zsh
 
 if [[ "$TERM" == (screen*|xterm*|rxvt*|tmux*|putty*|konsole*|gnome*) ]]; then
-    #add-zsh-hook -Uz precmd precmd-set-terminal-title
+    add-zsh-hook -Uz precmd precmd-set-terminal-title
     add-zsh-hook -Uz preexec preexec-set-terminal-title
 fi
 
