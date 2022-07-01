@@ -34,6 +34,11 @@ function preexec-set-terminal-title () {
     set-xterm-terminal-title "${(%):-"%n@%m: "}$2"
 }
 
+if [[ "$TERM" == (screen*|xterm*|rxvt*|tmux*|putty*|konsole*|gnome*) ]]; then
+    add-zsh-hook -Uz precmd precmd-set-terminal-title
+    add-zsh-hook -Uz preexec preexec-set-terminal-title
+fi
+
 # inputrc
 bindkey  "^[[H"   beginning-of-line
 bindkey  "^[[F"   end-of-line
@@ -46,6 +51,9 @@ zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
 bindkey "^[[A" up-line-or-beginning-search # Up
 bindkey "^[[B" down-line-or-beginning-search # Down
+# source: https://unix.stackexchange.com/a/140499
+bindkey "^[[1;5C" forward-word # Right
+bindkey "^[[1;5D" backward-word # Left
 
 # colors
 autoload -U colors && colors
@@ -65,6 +73,7 @@ else
 
     PS1="%{$fg[red]%}%n%{$reset_color%}@%{$fg[green]%}%m%{$reset_color%}:%{$fg[yellow]%}%~ %{$fg[red]%}%(?..%? :(%{$reset_color%} )%{$reset_color%}%# \$vcs_info_msg_0_"
 fi
+#eval $(starship init zsh)
 [ -r /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 
@@ -94,13 +103,7 @@ zstyle ':completion:*' menu select
 
 [ -r ~/.config/zsh/mainland.zsh ] && source ~/.config/zsh/mainland.zsh
 
-if [[ "$TERM" == (screen*|xterm*|rxvt*|tmux*|putty*|konsole*|gnome*) ]]; then
-    add-zsh-hook -Uz precmd precmd-set-terminal-title
-    add-zsh-hook -Uz preexec preexec-set-terminal-title
-fi
-
 export GPG_TTY=$TTY
-#eval $(starship init zsh)
 
 alias pau="sudo pacman -Syu"
 alias pai="sudo pacman --needed -S"
